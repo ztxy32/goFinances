@@ -9,6 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import AppLoading from 'expo-app-loading';
 import { StatusBar } from 'expo-status-bar';
 import { AppRoutes } from './src/routes/app.routs';
+import { Entrar } from './src/screens/Entrar';
 
 
 export default function App() {
@@ -21,7 +22,7 @@ export default function App() {
       <StatusBar />
       <ThemeProvider theme={theme}>
         <NavigationContainer>
-          <AppRoutes/>
+          <Entrar/>
         </NavigationContainer>
       </ThemeProvider>
     </>
