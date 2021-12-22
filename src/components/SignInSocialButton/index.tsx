@@ -12,7 +12,7 @@ interface Props extends RectButtonProps{
 
 export default function SignInSocialButton({title, svg: Svg, ...rest}: Props){
     return(
-        <Button>
+        <Button {...rest}>
             <ImageContainer>
                 <Svg/>
             </ImageContainer>

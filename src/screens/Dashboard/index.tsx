@@ -5,21 +5,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HighlightCard } from "../../components/HighlightCard";
 import { TransactionCard, TransactionCardProps } from "../../components/TransactionCard";
 import { 
-    Container, 
-    Header, 
-    UserContainer, 
-    UserInfo, 
-    Picture, 
-    User, 
-    UserGreeding, 
-    UserName,
-    LogOutIcon,
-    HighlightCards, 
-    Transactions, 
-    Title, 
-    TransactionsList, 
-    LogOutButton,
-    LoadingContainer
+    Container, Header, UserContainer, UserInfo, Picture, User, UserGreeding, UserName, LogOutIcon, HighlightCards, 
+    Transactions, Title, TransactionsList, LogOutButton,LoadingContainer
 } from "./style";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "styled-components";

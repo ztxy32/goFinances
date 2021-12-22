@@ -8,8 +8,9 @@ import theme from './src/global/styles/theme';
 import { NavigationContainer } from "@react-navigation/native";
 import AppLoading from 'expo-app-loading';
 import { StatusBar } from 'expo-status-bar';
-import { AppRoutes } from './src/routes/app.routs';
 import { Entrar } from './src/screens/Entrar';
+import { useAuth, AuthProvider } from './src/hooks/auth';
+import { Routes } from './src/routes';
 
 
 export default function App() {
@@ -21,9 +22,9 @@ export default function App() {
     <>
       <StatusBar />
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <Entrar/>
-        </NavigationContainer>
+          <AuthProvider>
+            <Routes/>
+          </AuthProvider>
       </ThemeProvider>
     </>
   )
