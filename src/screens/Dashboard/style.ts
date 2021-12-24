@@ -5,6 +5,10 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { BorderlessButton } from "react-native-gesture-handler";
 import { DataListProps } from ".";
 
+interface EmptyListImageProps{
+    source: string;
+}
+
 export const Container = styled.View`
     flex: 1;
     background-color: ${({theme}) => theme.cores.background};
@@ -87,3 +91,14 @@ export const LoadingContainer = styled.View`
     justify-content: center;
     align-items: center;
 `;
+export const EmptyListImageContainer = styled.View`
+    align-items: center;
+    justify-content: center;
+`;
+export const EmptyListImage = styled.Image<EmptyListImageProps>`
+    width: 300px;
+    height: 236px;
+`;
+export const EmptyListMessage = styled.Text`
+    font-family: ${({theme}) => theme.fontes.regular}
+`

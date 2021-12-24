@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { HighlightCard } from "../../components/HighlightCard";
 import { TransactionCard, TransactionCardProps } from "../../components/TransactionCard";
-import { 
-    Container, Header, UserContainer, UserInfo, Picture, User, UserGreeding, UserName, LogOutIcon, HighlightCards, 
-    Transactions, Title, TransactionsList, LogOutButton,LoadingContainer
+import { Container, Header, UserContainer, UserInfo, Picture, User, UserGreeding, UserName, 
+    LogOutIcon, HighlightCards, Transactions, Title, TransactionsList, LogOutButton, 
+    LoadingContainer,EmptyListImageContainer , EmptyListImage, EmptyListMessage
 } from "./style";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "styled-components";
+import emptyListImage from "../../assets/emptyList.png";
 
 
 export interface DataListProps extends TransactionCardProps{
@@ -176,9 +177,17 @@ export function Dashboard(){
                         <TransactionsList 
                             data={transactions} 
                             keyExtractor={item => item.id}
-                            renderItem={ ({item}) => <TransactionCard dados={item}/> }  
-                        />                    
+                            renderItem={ ({item}) => <TransactionCard dados={item}/> } 
+                            ListEmptyComponent={
+                                <EmptyListImageContainer>
+                                    <EmptyListImage source={emptyListImage}/>
+                                    <EmptyListMessage>Nenhum item encontrado :/</EmptyListMessage>
+                                </EmptyListImageContainer> 
+                            } 
+                        />     
+                                       
                     </Transactions>
+                    
             </>
             }
             
