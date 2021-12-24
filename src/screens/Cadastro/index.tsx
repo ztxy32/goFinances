@@ -114,7 +114,7 @@ export function Cadastro(){
                         <TransactionType>
                             <TransactionTypeButton 
                                 tipo="up" 
-                                titulo="Entrada" 
+                                titulo="Entrada"
                                 onPress={() => handleTransactionTypeSelect("positive")}
                                 isSelected={transactionType === "positive"}
                             />

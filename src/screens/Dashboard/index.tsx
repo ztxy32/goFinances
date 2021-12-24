@@ -35,6 +35,7 @@ export function Dashboard(){
     const theme = useTheme();
 
     function getLastTransactionDate(collection: DataListProps[], tipo: "positive" | "negative"){
+        if (collection.length > 0){
         const lasTransaction = Math.max.apply(Math, collection
             .filter(transactions => transactions.tipo === tipo)
             .map(transactions => new Date(transactions.dia).getTime()))
@@ -43,7 +44,7 @@ export function Dashboard(){
                 day: "2-digit", 
                 month: "long", 
                 year: "2-digit",
-            }).format(new Date(lasTransaction));
+            }).format(new Date(lasTransaction));}
     }
 
     async function loadTransactions(){
@@ -88,7 +89,7 @@ export function Dashboard(){
             
             const lastTransactionEntries = getLastTransactionDate(transactions, "positive");
             const lastTransactionExpensive = getLastTransactionDate(transactions, "negative");
-            const totalInterval = `01 a ${lastTransactionExpensive}`;
+            const totalInterval = lastTransactionExpensive != null ? `01 a ${lastTransactionExpensive}` : "Nenhum período";
 
             const total = entriesTotal - expensiveTotal;
             setHighlightData({
@@ -97,14 +98,14 @@ export function Dashboard(){
                         style: "currency",
                         currency: "BRL"
                     }),
-                    lastTransaction: `Última entrada dia ${lastTransactionEntries}`,
+                    lastTransaction: lastTransactionEntries != null ? `Última entrada dia ${lastTransactionEntries} ` : "Última entrada nunca",
                 },
                 expensive:{
                     amount: expensiveTotal.toLocaleString("pt-BR",{
                         style: "currency",
                         currency: "BRL"
                     }),
-                    lastTransaction: `Última saída dia ${lastTransactionExpensive}`,
+                    lastTransaction: lastTransactionExpensive != null ? `Última saída dia ${lastTransactionExpensive}` : "Última saída nunca" ,
                 },
                 total: {
                     amount: total.toLocaleString("pt-BR",{
