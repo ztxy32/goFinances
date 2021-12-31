@@ -1,12 +1,16 @@
 {
   "expo": {
     "name": "gofinances",
+    "icon": "./assets/gofinances.png",
     "slug": "gofinances",
     "scheme": "gofinances",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "com.keciro.gofinances"
+    }
   },
   "name": "gofinances"
 }

@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as AuthSession from 'expo-auth-session';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import { Alert } from "react-native";
 
 const dataKey = "@gofinances:user";
 const {CLIENT_ID} = process.env;
@@ -27,13 +28,15 @@ interface AuthContextData{
     user: User;
     SignInWithGoogle(): Promise<void>;
     SignInWithApple(): Promise<void>;
+    SignOut(): Promise<void>;
+    loading: boolean;
 }
 
 const AuthContext = createContext({} as AuthContextData);
 
 function AuthProvider({children}: AuthProviderProps){
     const [user, setUser] = useState<User>({} as User);
-    const [loading, setLoadong] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     async function SignInWithGoogle(){
         try{
@@ -55,7 +58,7 @@ function AuthProvider({children}: AuthProviderProps){
                 setUser(userLogged);
                 await AsyncStorage.setItem(dataKey, JSON.stringify(userLogged))
             }
-        }catch (error){throw new Error(error);}
+        }catch (e: any){throw new Error(e);}
     }
     async function SignInWithApple(){
         try{
@@ -66,17 +69,35 @@ function AuthProvider({children}: AuthProviderProps){
                 ]
             });
             if (credential){
+                const name = credential.fullName?.givenName!;
+                const picture = `https://ui-avatars.com/api/?name=${credential.fullName}&lenght=2`;
                 const userLogged = {
                     id: credential.user,
                     mail: credential.email!,
-                    name: credential.fullName?.givenName!,
-                    picture: undefined,
+                    name,
+                    picture,
                 };
                 setUser(userLogged);
                 await AsyncStorage.setItem(dataKey, JSON.stringify(userLogged))
             }
-        }catch (error){throw new Error(error);}
+        }catch (error: any){throw new Error(error);}
     }
+    async function SignOut(){
+        Alert.alert("Fazer logout", "Tens certeza de que desejas sair?",[
+            {
+                text: "não",
+                onPress: () => { return },
+            },
+            {
+                text: "sim",
+                onPress: async function Logout(){
+                    setUser({} as User)
+                    await AsyncStorage.removeItem(dataKey)
+                },
+            },
+        ])
+    }
+
     useEffect(() => {
         async function loadUserStoragedData(): Promise<void>{
             const userStoraged = await AsyncStorage.getItem(dataKey);
@@ -84,14 +105,14 @@ function AuthProvider({children}: AuthProviderProps){
                 const userLogged = JSON.parse(userStoraged) as User;
                 setUser(userLogged);
             }
-            setLoadong(false);
+            setLoading(false);
         }
         loadUserStoragedData();
         
     }, []);
 
     return(
-        <AuthContext.Provider value={{ user, SignInWithGoogle, SignInWithApple }}>
+        <AuthContext.Provider value={{ user, SignInWithGoogle, SignInWithApple, SignOut, loading }}>
             {children}
         </AuthContext.Provider>
     );

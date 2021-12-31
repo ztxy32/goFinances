@@ -1,6 +1,7 @@
-import React from "react";
-import { Alert } from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, Alert, Platform } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { useTheme } from "styled-components";
 
 import AppleSvg from "../../assets/apple.svg";
 import GoogleSvg from "../../assets/google.svg";
@@ -13,21 +14,27 @@ import { Container, Header, TitleWrapper, Title, SignInTitle, Footer, FooterWrap
 
 export function Entrar(){
     const { SignInWithGoogle, SignInWithApple } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
+    const theme = useTheme();
 
     async function handleSignInWithGoodle(){
         try{
-            await SignInWithGoogle();
+            setIsLoading(true);
+            return await SignInWithGoogle();
         }catch(error){
             console.log(error)
             Alert.alert("Não foi possível conectar à conta Google")
+            setIsLoading(false)
         }
     }
     async function handleSignInWithApple(){
         try{
-            await SignInWithApple();
+            setIsLoading(true);
+            return await SignInWithApple();
         }catch(error){
             console.log(error)
             Alert.alert("Não foi possível conectar à conta Apple")
+            setIsLoading(false)
         }
     }
 
@@ -46,9 +53,12 @@ export function Entrar(){
             <Footer>
                 <FooterWrapper>
                     <SignInSocialButton title="Entrar com o Google" svg={GoogleSvg} onPress={handleSignInWithGoodle}/>
-                    <SignInSocialButton title="Entrar com a Apple" svg={AppleSvg} onPress={handleSignInWithApple}/>
+                    {Platform.OS === "ios" &&
+                        <SignInSocialButton title="Entrar com a Apple" svg={AppleSvg} onPress={handleSignInWithApple}/>
+                    }
+                    
                 </FooterWrapper>
-                
+                {isLoading && <ActivityIndicator color={theme.cores.shape} />}
             </Footer>
         </Container>
     );

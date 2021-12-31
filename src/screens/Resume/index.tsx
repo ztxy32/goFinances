@@ -1,17 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { HistoryCard } from "../../components/HistoryCard";
-import { 
-    Container, 
-    Header, 
-    Titulo, 
-    Content, 
-    ChartContainer, 
-    MonthSelector, 
-    MonthSelectButton, 
-    MonthSelectIcon, 
-    Month, 
-    LoadingContainer,
+import { Container, Header, Titulo, Content, ChartContainer, MonthSelector, 
+    MonthSelectButton, MonthSelectIcon, Month, LoadingContainer, 
 } from "./style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { VictoryPie } from "victory-native";
@@ -137,8 +128,6 @@ export function Resume(){
                             <MonthSelectIcon name="chevron-right" />
                         </MonthSelectButton>
                     </MonthSelector>
-
-
                     <ChartContainer>
                         <VictoryPie 
                             data={totalByCategories}

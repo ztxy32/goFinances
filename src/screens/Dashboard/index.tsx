@@ -11,6 +11,7 @@ import { Container, Header, UserContainer, UserInfo, Picture, User, UserGreeding
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "styled-components";
 import emptyListImage from "../../assets/emptyList.png";
+import { useAuth } from "../../hooks/auth";
 
 
 export interface DataListProps extends TransactionCardProps{
@@ -34,6 +35,7 @@ export function Dashboard(){
     const [transactions, setTransactions] = useState<DataListProps[]>([]);
     const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
     const theme = useTheme();
+    const { SignOut, user} = useAuth();
 
     function getLastTransactionDate(collection: DataListProps[], tipo: "positive" | "negative"){
         if (collection.length > 0){
@@ -139,14 +141,14 @@ export function Dashboard(){
                     <UserContainer>
                         <UserInfo>
                             <Picture source={
-                                {uri: "https://avatars.githubusercontent.com/u/35979271?s=400&u=37b1cd99ed95de4f5601df3f6392736560c992a5&v=4"}
+                                {uri: user.picture}
                             }/>
                             <User>
                                 <UserGreeding>Olá, </UserGreeding>
-                                <UserName>Erys</UserName>
+                                <UserName>{user.name}</UserName>
                             </User>
                         </UserInfo>
-                        <LogOutButton onPress={() => {} }>
+                        <LogOutButton onPress={SignOut}>
                             <LogOutIcon name="logout"/>
                         </LogOutButton>
                         
@@ -172,22 +174,20 @@ export function Dashboard(){
                         lastTransaction={highlightData.total.lastTransaction}
                     />
                 </HighlightCards>
-                    <Transactions>
-                        <Title>Histórico</Title>
-                        <TransactionsList 
-                            data={transactions} 
-                            keyExtractor={item => item.id}
-                            renderItem={ ({item}) => <TransactionCard dados={item}/> } 
-                            ListEmptyComponent={
-                                <EmptyListImageContainer>
-                                    <EmptyListImage source={emptyListImage}/>
-                                    <EmptyListMessage>Nenhum item encontrado :/</EmptyListMessage>
-                                </EmptyListImageContainer> 
-                            } 
-                        />     
-                                       
-                    </Transactions>
-                    
+                <Transactions>
+                    <Title>Histórico</Title>
+                    <TransactionsList 
+                        data={transactions} 
+                        keyExtractor={item => item.id}
+                        renderItem={ ({item}) => <TransactionCard dados={item}/> } 
+                        ListEmptyComponent={
+                            <EmptyListImageContainer>
+                                <EmptyListImage source={emptyListImage}/>
+                                <EmptyListMessage>Nenhum item encontrado :/</EmptyListMessage>
+                            </EmptyListImageContainer> 
+                        } 
+                    />                 
+                </Transactions>
             </>
             }
             
