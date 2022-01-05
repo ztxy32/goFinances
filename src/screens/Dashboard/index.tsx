@@ -27,33 +27,31 @@ interface HighlightData{
     total: HighlightProps;
 }
 
-
-const dataKey = "@goFinances:transactions";
-
 export function Dashboard(){
     const [isLoading, setIsLoading] = useState(true);
     const [transactions, setTransactions] = useState<DataListProps[]>([]);
     const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
     const theme = useTheme();
     const { SignOut, user} = useAuth();
+    const dataKey = `@goFinances:transactions_user:${user.id}`;
 
     function getLastTransactionDate(collection: DataListProps[], tipo: "positive" | "negative"){
-        if (collection.length > 0){
-        const lasTransaction = Math.max.apply(Math, collection
-            .filter(transactions => transactions.tipo === tipo)
-            .map(transactions => new Date(transactions.dia).getTime()))
+        if (collection.length < 0){
+            const lasTransaction = Math.max.apply(Math, collection
+                .filter(transactions => transactions.tipo === tipo)
+                .map(transactions => new Date(transactions.dia).getTime()))
 
-            return Intl.DateTimeFormat("pt-BR", {
-                day: "2-digit", 
-                month: "long", 
-                year: "2-digit",
-            }).format(new Date(lasTransaction));}
+                return Intl.DateTimeFormat("pt-BR", {
+                    day: "2-digit", 
+                    month: "long", 
+                    year: "2-digit",
+                }).format(new Date(lasTransaction));
+            }
     }
 
     async function loadTransactions(){
         const response = await AsyncStorage.getItem(dataKey);
         const transactions = response ? JSON.parse(response) : [];
-
 
         let entriesTotal = 0;
         let expensiveTotal = 0;
@@ -66,25 +64,17 @@ export function Dashboard(){
                     expensiveTotal += Number(item.valor)
                 }
 
-                const valor = Number(item.valor)
-                    .toLocaleString("pt-BR", {
-                        style: "currency", 
-                        currency: "BRL"
-                    });
-
-                const dia = Intl.DateTimeFormat("pt-BR", {
-                        day: "2-digit", 
-                        month: "2-digit", 
-                        year: "2-digit",
-                    }).format(new Date(item.dia));
+                const valor = Number(item.valor).toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
+                
+                const dia = Intl.DateTimeFormat("pt-BR", {day: "2-digit", month: "2-digit", year: "2-digit",}).format(new Date(item.dia));
                 
                 return{
                     id: item.id, 
                     name: item.name,
-                    valor: valor,
+                    valor,
                     tipo: item.tipo,
                     categoria: item.categoria,
-                    dia: dia,
+                    dia,
                 }
             });
 
@@ -92,7 +82,7 @@ export function Dashboard(){
             
             const lastTransactionEntries = getLastTransactionDate(transactions, "positive");
             const lastTransactionExpensive = getLastTransactionDate(transactions, "negative");
-            const totalInterval = lastTransactionExpensive != null ? `01 a ${lastTransactionExpensive}` : "Nenhum período";
+            const totalInterval = lastTransactionExpensive != null ? `01 a ${lastTransactionExpensive}` : "Dados insuficientes";
 
             const total = entriesTotal - expensiveTotal;
             setHighlightData({
@@ -108,7 +98,7 @@ export function Dashboard(){
                         style: "currency",
                         currency: "BRL"
                     }),
-                    lastTransaction: lastTransactionExpensive != null ? `Última saída dia ${lastTransactionExpensive}` : "Última saída nunca" ,
+                    lastTransaction: lastTransactionExpensive != null ? `Última saída dia ${lastTransactionExpensive}` : "Última entrada nunca" ,
                 },
                 total: {
                     amount: total.toLocaleString("pt-BR",{
@@ -118,8 +108,9 @@ export function Dashboard(){
                     lastTransaction: totalInterval,
                 }
             });
-            //console.log(transactionsFormatted)
-            setIsLoading(false)
+            console.log(transactionsFormatted)
+        setIsLoading(false)
+            
     }
 
     useEffect(() => {
@@ -177,6 +168,7 @@ export function Dashboard(){
                 <Transactions>
                     <Title>Histórico</Title>
                     <TransactionsList 
+                        inverted
                         data={transactions} 
                         keyExtractor={item => item.id}
                         renderItem={ ({item}) => <TransactionCard dados={item}/> } 

@@ -86,7 +86,7 @@ function AuthProvider({children}: AuthProviderProps){
         Alert.alert("Fazer logout", "Tens certeza de que desejas sair?",[
             {
                 text: "não",
-                onPress: () => { return },
+                onPress: () => {},
             },
             {
                 text: "sim",
@@ -95,7 +95,7 @@ function AuthProvider({children}: AuthProviderProps){
                     await AsyncStorage.removeItem(dataKey)
                 },
             },
-        ])
+        ],{cancelable: true})
     }
 
     useEffect(() => {

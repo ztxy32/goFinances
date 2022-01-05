@@ -15,6 +15,7 @@ import { InputForm } from "../../components/Forms/InputForm";
 import { TransactionTypeButton } from "../../components/Forms/TransactionTypeButton";
 import { CategorySelect } from "../CategorySelect";
 import { Container, Header, Titulo, Form, Fields,TransactionType } from "./style";
+import { useAuth } from "../../hooks/auth";
 
 
 interface DadosDoFormulario{
@@ -40,7 +41,8 @@ export function Cadastro(){
     const [transactionType, setTransactionType] = useState('');
     const [categoryModalOpen, setCategoryModalOpen] = useState(false);
     const navegacao = useNavigation();
-    const dataKey = "@goFinances:transactions";
+    const {user} = useAuth();
+    const dataKey = `@goFinances:transactions_user:${user.id}`;
 
     const {control, handleSubmit, reset, formState: { errors }} = useForm({resolver: yupResolver(schema)});
 

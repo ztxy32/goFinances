@@ -13,8 +13,9 @@ import { useTheme } from "styled-components";
 import { addMonths, subMonths, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useFocusEffect } from "@react-navigation/native";
+import { useAuth } from "../../hooks/auth";
 
-const dataKey = "@goFinances:transactions";
+
 
 interface TransactionData{
     tipo: "positive" | "negative";
@@ -37,11 +38,12 @@ export function Resume(){
     const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const theme = useTheme();
+    const {user} = useAuth();
+    const dataKey = `@goFinances:transactions_user:${user.id}`;
 
     function handleSwitchDate(action: "previus" | "next"){
         if (action === "next"){
             setSelectedDate(addMonths(selectedDate, 1));
-            //console.log(newDate)
         }else{
             setSelectedDate(subMonths(selectedDate, 1));
         }
@@ -63,7 +65,6 @@ export function Resume(){
         .reduce((acumullator: number, expensive: TransactionData) => {
             return acumullator + Number(expensive.valor);
         }, 0)
-        //console.log(expensiveTotal);
 
         const totalByCategory: CategoryData[] = [];
         categories.forEach(category => {
@@ -92,7 +93,6 @@ export function Resume(){
             })
             setTotalByCategories(totalByCategory);
             setIsLoading(false);
-        //console.log(totalByCategory)
     }
     useFocusEffect(
         useCallback( () => { loadData() },
