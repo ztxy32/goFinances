@@ -36,7 +36,7 @@ export function Dashboard(){
     const dataKey = `@goFinances:transactions_user:${user.id}`;
 
     function getLastTransactionDate(collection: DataListProps[], tipo: "positive" | "negative"){
-        if (collection.length < 0){
+        if (collection.length > 0){
             const lasTransaction = Math.max.apply(Math, collection
                 .filter(transactions => transactions.tipo === tipo)
                 .map(transactions => new Date(transactions.dia).getTime()))
@@ -108,7 +108,6 @@ export function Dashboard(){
                     lastTransaction: totalInterval,
                 }
             });
-            console.log(transactionsFormatted)
         setIsLoading(false)
             
     }
